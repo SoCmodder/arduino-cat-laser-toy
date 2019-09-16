@@ -19,36 +19,46 @@ int buttonVal = 0; // variable for reading the pin status
 int runTime = 600000;
 
 void setup() {
-  // put your setup code here, to run once:
-   pinMode(motor1_ena, OUTPUT);
-   pinMode(motor1_in1, OUTPUT);
-   pinMode(motor1_in2, OUTPUT);
-   pinMode(laserPin, OUTPUT);
-   pinMode(buttonInPin, OUTPUT);
+  Serial.begin(9600);
+  pinMode(motor1_ena, OUTPUT);
+  pinMode(motor1_in1, OUTPUT);
+  pinMode(motor1_in2, OUTPUT);
+  pinMode(laserPin, OUTPUT);
+  pinMode(buttonInPin, INPUT);
 
-   digitalWrite(motor1_in1, HIGH);
-   digitalWrite(motor1_in2, LOW);
+  digitalWrite(motor1_in1, HIGH);
+  digitalWrite(motor1_in2, LOW);
 
   analogWrite(motor1_ena, motorSpeed);
   laserON();
 }
 
 void loop() {
-  randomVal = random(500, 3000);
-  
   // cycle start
-  
-  movement();
-
-  
+  if(buttonPressed()) {
+    //do standard loop function for 15 minutes
+    standardLoopFunction();
+    Serial.println("button pressed");
+  }
   // cycle end
-  
-  delay(randomVal);
+}
+
+void standardLoopFunction() {
+  int loopLength = 900000;
+  long starttime = millis();
+  long endtime = starttime;
+
+  while((endtime - starttime) <= loopLength) {
+    endtime = millis();
+    randomVal = random(500, 3000);
+    movement();
+    delay(randomVal);  
+  }  
 }
 
 bool buttonPressed() {
   buttonVal = digitalRead(buttonInPin);
-  return buttonVal == HIGH;
+  return buttonVal == LOW;
 }
 
 void movement() {
