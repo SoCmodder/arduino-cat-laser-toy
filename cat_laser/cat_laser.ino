@@ -7,10 +7,8 @@ int motor1_in1 = 4;
 int motor1_in2 = 5;
 
 int motorSpeed = 60;
-
 // Laser Constants
 int laserPin = 10;
-
 bool motorDirection = true;
 
 void setup() {
@@ -20,14 +18,16 @@ void setup() {
   pinMode(motor1_in2, OUTPUT);
   pinMode(laserPin, OUTPUT);
 
-  analogWrite(motor1_ena, motorSpeed);
-
+  setMotorSpeed(motorSpeed);
   motorForward();
-
   laserON();
 }
 
 void loop() {
+  standardLoop();  
+}
+
+void standardLoop() {
   if (motorDirection) {
     motorForward(); 
   } else {
@@ -36,7 +36,7 @@ void loop() {
 
   motorDirection = !motorDirection;
   int randomVal = random(2000, 8000);
-  delay(randomVal);
+  delay(randomVal);  
 }
 
 void motorForward() {
@@ -47,6 +47,10 @@ void motorForward() {
 void motorReverse() {
   digitalWrite(motor1_in1, HIGH);
   digitalWrite(motor1_in2, LOW);   
+}
+
+void setMotorSpeed(int speed) {
+  analogWrite(motor1_ena, speed);
 }
 
 void laserON() {
